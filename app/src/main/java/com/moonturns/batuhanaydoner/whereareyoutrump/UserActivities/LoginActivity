@@ -1,0 +1,291 @@
+package com.moonturns.batuhanaydoner.whereareyoutrump.UserActivities;
+
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.moonturns.batuhanaydoner.whereareyoutrump.GameFragements.ChangePasswordFragment;
+import com.moonturns.batuhanaydoner.whereareyoutrump.GameFragements.ConformationMailFragment;
+import com.moonturns.batuhanaydoner.whereareyoutrump.GameFragements.ForgotPasswordFragment;
+import com.moonturns.batuhanaydoner.whereareyoutrump.OpenActivity;
+import com.moonturns.batuhanaydoner.whereareyoutrump.R;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private EditText etEmailLogin, etPasswordLogin;
+    private TextView txtRegister, txtPassword,txtConformationMail,txtChangePassword;
+    private ImageView imageLogIn;
+    private ProgressBar progressBarLogin;
+
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    private void crt() {
+
+        etEmailLogin = (EditText) this.findViewById(R.id.etEmailLogin);
+        etPasswordLogin = (EditText) this.findViewById(R.id.etPasswordLogin);
+        txtRegister = (TextView) this.findViewById(R.id.txtRegister);
+        txtPassword = (TextView) this.findViewById(R.id.txtPassword);
+        imageLogIn = (ImageView) this.findViewById(R.id.imageLogIn);
+        txtConformationMail=(TextView) this.findViewById(R.id.txtConformationMail);
+        txtChangePassword=(TextView) this.findViewById(R.id.txtChangePassword);
+
+        progressBarLogin = (ProgressBar) this.findViewById(R.id.progressBarLogin);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        crt();
+
+        initAuthStateListener();
+
+        setImageLogIn();
+        setTxtRegister();
+        setTxtPassword();
+        setTxtConformationMail();
+        setChangePassword();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthStateListener);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        FirebaseAuth.getInstance().removeAuthStateListener(mAuthStateListener);
+
+    }
+
+    //mAuthStateListener
+    private void initAuthStateListener() {
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser kullanici = firebaseAuth.getCurrentUser();
+
+            }
+        };
+
+    }
+
+    //txtConformationMail listener
+    private void setTxtConformationMail(){
+
+        txtConformationMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                openConformationMailFragment();
+
+            }
+        });
+
+    }
+
+    //ConformationMailFragment açılır
+    private void openConformationMailFragment(){
+
+        FragmentManager fragmentManager=this.getSupportFragmentManager();
+        ConformationMailFragment cmf=new ConformationMailFragment();
+        cmf.show(fragmentManager,"dialog");
+
+    }
+
+    //txtPassword listener
+    private void setTxtPassword(){
+
+        txtPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                openPasswordFragment();
+
+            }
+        });
+
+    }
+
+    //ForgotPasswordFragment açılır
+    private void openPasswordFragment(){
+
+        FragmentManager fragmentManager=this.getSupportFragmentManager();
+        ForgotPasswordFragment fpf=new ForgotPasswordFragment();
+        fpf.show(fragmentManager,"dialog");
+
+    }
+
+    //kullanıcıyı sisteme girir listener
+    private void setImageLogIn() {
+
+        imageLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                getLoginValues();
+
+            }
+        });
+
+    }
+
+    //setTxtChangePassword listener
+    private void setChangePassword(){
+
+        txtChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                changePasswordFragment();
+
+            }
+        });
+
+    }
+
+    //ChangePasswordFragment açılır
+    private void changePasswordFragment(){
+
+        FragmentManager fragmentManager=this.getSupportFragmentManager();
+        ChangePasswordFragment cpf=new ChangePasswordFragment();
+        cpf.show(fragmentManager,"dialog");
+
+    }
+
+    //girilen değerlere bakar
+    private void getLoginValues() {
+
+        if (!etEmailLogin.getText().toString().isEmpty() && !etPasswordLogin.getText().toString().isEmpty()) {
+
+            String email = etEmailLogin.getText().toString();
+            String password = etPasswordLogin.getText().toString();
+
+            logIn(email, password);
+
+        } else {
+
+            showMessage(R.string.empty_fields);
+
+        }
+
+    }
+
+    //kullanıcıyı sisteme giriş yapar
+    private void logIn(String email, String password) {
+
+        showProgressBar();
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                if (task.isSuccessful()) {
+
+                    FirebaseUser kullanici = FirebaseAuth.getInstance().getCurrentUser();
+
+                    if (kullanici != null) {
+
+                        if (!kullanici.isEmailVerified()) {
+
+                            showMessage(R.string.email_verified);
+                            FirebaseAuth.getInstance().signOut();
+                            closeProgressBar();
+
+                        } else {
+
+                            openOpenActivity();
+
+                        }
+
+                    }
+
+
+                } else {
+
+                    FirebaseAuth.getInstance().signOut();
+                    closeProgressBar();
+
+                    showMessage(R.string.loginError);
+
+                }
+
+            }
+        });
+
+    }
+
+    //MainActivity açılır intent
+    private void openOpenActivity() {
+
+        Intent intent = new Intent(this, OpenActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
+
+    //txtRegister listener
+    private void setTxtRegister() {
+
+        txtRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                openRegisterActivity();
+
+            }
+        });
+
+    }
+
+    //RegisterActivity açılır intent
+    private void openRegisterActivity() {
+
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
+
+    }
+
+    //progressbar gösterir
+    private void showProgressBar() {
+
+        progressBarLogin.setVisibility(View.VISIBLE);
+
+    }
+
+    //progressbar kapatır
+    private void closeProgressBar() {
+
+        progressBarLogin.setVisibility(View.INVISIBLE);
+
+    }
+
+    //toast mesaj gösterir
+    private void showMessage(int message) {
+
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+
+    }
+
+}
