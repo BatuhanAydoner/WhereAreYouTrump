@@ -1,0 +1,44 @@
+package com.moonturns.batuhanaydoner.whereareyoutrump.FirebaseDatabase;
+
+import io.realm.internal.Keep;
+
+@Keep
+public class Renovation {
+
+    private String day;
+    private String week;
+    private String week_number;
+    private String updating;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getWeek() {
+        return week;
+    }
+
+    public void setWeek(String week) {
+        this.week = week;
+    }
+
+    public String getWeek_number() {
+        return week_number;
+    }
+
+    public void setWeek_number(String week_number) {
+        this.week_number = week_number;
+    }
+
+    public String getUpdating() {
+        return updating;
+    }
+
+    public void setUpdating(String updating) {
+        this.updating = updating;
+    }
+}
