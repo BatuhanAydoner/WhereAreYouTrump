@@ -1,0 +1,17 @@
+package com.moonturns.batuhanaydoner.whereareyoutrump.FirebaseDatabase;
+
+import io.realm.internal.Keep;
+
+@Keep
+public class TotalAccount {
+
+    private String totalaccount;
+
+    public String getTotalaccount() {
+        return totalaccount;
+    }
+
+    public void setTotalaccount(String totalaccount) {
+        this.totalaccount = totalaccount;
+    }
+}
