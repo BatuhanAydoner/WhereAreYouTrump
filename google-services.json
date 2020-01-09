@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "661036050787",
+    "firebase_url": "https://where-are-you-trump.firebaseio.com",
+    "project_id": "where-are-you-trump",
+    "storage_bucket": "where-are-you-trump.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661036050787:android:8bc7496e78f9769a",
+        "android_client_info": {
+          "package_name": "com.moonturns.batuhanaydoner.whereareyoutrump"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661036050787-rme0lf8o92vgt69fu53ivbhfm68rag0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIvpaV870rbkHRJSIMMSaCtsXBOebGLIE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
